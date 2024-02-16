@@ -1,0 +1,64 @@
+<head>
+  <style>
+    * {
+      font-family: sans-serif;
+    }
+    h2 {
+      text-align: center;
+      padding-top: 8px;
+      color: #222;
+    }
+    input {
+      padding: 4px;
+      border-radius: 2px;
+      border: 0;
+      background: #eee;
+      width: 300px;
+      font-size: 100%;
+    }
+  </style>
+</head>
+
+<h2>Fill with Pokemon Image</h2>
+
+<!-- TODO: Add fuzzy search with Fuse.js or something -->
+<!-- <label for="search">Search</label>
+<input id="search" placeholder="Pikachu" /> -->
+
+<div id="pokemon"></div>
+
+<script>
+  async function main() {
+    const limit = 90;
+    const allPokemon = await fetch(
+      `https://pokeapi.co/api/v2/pokemon?limit=${limit}`
+    )
+      .then((res) => res.json())
+      .then((data) => data.results);
+
+    let imageElements = "";
+
+    for (const pokemon of allPokemon) {
+      const pokemonImageUrl = await fetch(pokemon.url)
+        .then((res) => res.json())
+        .then((data) => data.sprites.front_default);
+
+      imageElements += ` <img src="${pokemonImageUrl}">`;
+    }
+
+    document.querySelector("#pokemon").innerHTML = imageElements;
+
+    const imgEls = document.querySelectorAll("img");
+    imgEls.forEach((imgEl) => {
+      imgEl.addEventListener("click", (e) => {
+        const imgUrl = e.target.src;
+        parent.postMessage(
+          { pluginMessage: { type: "swap-for-pokemon", imgUrl } },
+          "*"
+        );
+      });
+    });
+  }
+
+  main();
+</script>
