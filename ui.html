@@ -30,11 +30,6 @@
       -moz-osx-font-smoothing: grayscale; /* For Firefox on macOS */
       overflow-x: hidden;
     }
-    #container {
-      display: flex;
-      flex-direction: column;
-    }
-
     input {
       position: relative;
       z-index: 1;
@@ -54,18 +49,20 @@
     input::placeholder {
       color: #d0d0d0;
     }
-    #pokemon {
+    #pokemon-wrapper {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
       padding: 8px;
+      padding-top: 64px;
+      overflow-y: auto;
+    }
+    #pokemon {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      overflow-y: auto;
-      padding-top: 64px;
     }
     #pokemon img {
       width: 100px;
@@ -100,12 +97,12 @@
   </style>
 </head>
 
-<div id="container">
-  <input
-    id="search"
-    placeholder="Search"
-    spellcheck="false"
-  />
+<input
+  id="search"
+  placeholder="Search"
+  spellcheck="false"
+/>
+<div id="pokemon-wrapper">
   <div id="pokemon"></div>
 </div>
 
