@@ -1,19 +1,18 @@
 figma.showUI(__html__);
 
-figma.ui.resize(640, 400);
+figma.ui.resize(338, 540);
 
 figma.ui.onmessage = (msg) => {
   if (msg.type === "swap-for-pokemon") {
     figma.createImageAsync(msg.imgUrl).then(async (image: Image) => {
       const selectedNode = figma.currentPage.selection[0]
 
-      if (!selectedNode) {
-        figma.notify(`You must select a node first`, {
-          timeout: 1600
-        });
+      if (!selectedNode || !("fills" in selectedNode)) {
+        figma.notify(`You must select a shape.`, { timeout: 1600 });
+        return;
       }
 
-      const solidWhiteFill = {
+      const solidWhiteFill: SolidPaint = {
         type: "SOLID",
         visible: true,
         opacity: 1,
@@ -26,12 +25,12 @@ figma.ui.onmessage = (msg) => {
         boundVariables: {},
       };
 
-      const pokemonFill = {
+      const pokemonFill: ImagePaint = {
         type: "IMAGE",
         visible: true,
         opacity: 1,
         blendMode: "NORMAL",
-        scaleMode: "FILL",
+        scaleMode: "FIT",
         imageTransform: [
           [1, 0, 0],
           [0, 1, 0],
@@ -49,7 +48,7 @@ figma.ui.onmessage = (msg) => {
         },
         imageHash: image.hash,
       };
-      
+
       selectedNode.fills = [solidWhiteFill, pokemonFill];
     });
   }
